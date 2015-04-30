@@ -1,0 +1,25 @@
+3 Victories!	Win 3 games with any class.	40
+Destroy them All	Destroy 40 minions.	40
+Only the Mighty	Play 20 minions that cost 5 or more.        	40
+The Meek Shall Inherit	Play 40 minions that cost 2 or less.	40
+Spell Master	Cast 40 spells.	40
+Beat Down	Deal 100 damage to enemy heroes.	40
+Druid or Hunter Victory	Win 2 games with Druid or Hunter. 	40
+Druid or Rogue Victory	Win 2 games with Druid or Rogue.	40
+Hunter or Mage Victory	Win 2 games with Hunter or Mage. 	40
+Mage or Shaman Victory	Win 2 games with Mage or Shaman.	40
+Paladin or Priest Victory	Win 2 games with Paladin or Priest. 	40
+Paladin or Warrior Victory	Win 2 games with Paladin or Warrior.	40
+Priest or Warlock Victory	Win 2 games with Priest or Warlock. 	40
+Rogue or Warrior Victory	Win 2 games with Rogue or Warrior.	40
+Shaman or Warlock Victory	Win 2 games with Shaman or Warlock.	40
+Druid or Hunter Dominance	Win 5 games with Druid or Hunter. 	60
+Druid or Rogue Dominance	Win 5 games with Druid or Rogue.	60
+Hunter or Mage Dominance	Win 5 games with Hunter or Mage.  	60
+Mage or Shaman Dominance	Win 5 games with Mage or Shaman.	60
+Paladin or Priest Dominance	Win 5 games with Paladin or Priest. 	60
+Paladin or Warrior Dominance	Win 5 games with Paladin or Warrior.	60
+Priest or Warlock Dominance	Win 5 games with Priest or Warlock. 	60
+Rogue or Warrior Dominance	Win 5 games with Rogue or Warrior.  	60
+Shaman or Warlock Dominance	Win 5 games with Shaman or Warlock.	60
+Total Dominance	Win 7 games in any mode.	100

@@ -1,0 +1,235 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Tutorial &mdash; Daily Quest Simulator 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Daily Quest Simulator 1.0.0 documentation" href="index.html" />
+    <link rel="next" title="Handy Dandy Reference" href="reference.html" />
+    <link rel="prev" title="Quick Setup" href="quick_setup.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="reference.html" title="Handy Dandy Reference"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="quick_setup.html" title="Quick Setup"
+             accesskey="P">previous</a> |</li>
+        <li><a href="README.html">Daily Quest Simulator 1.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="tutorial">
+<h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h1>
+<p>Welcome to the tutorial! In this tutorial, we will be going over how to set up a basic simulation, as well as how to implement your own algorithms.</p>
+<div class="section" id="running-the-simulator">
+<h2>Running the simulator<a class="headerlink" href="#running-the-simulator" title="Permalink to this headline">¶</a></h2>
+<p>The main function will be the main thread that will be holding all the parameters, running the simulations, and collecting the results.</p>
+<p>There are several variables that can be changed to suit your liking.</p>
+<ul class="simple">
+<li>QuestFile: This file is specfies the path to wherever the files containing daily quest information are.</li>
+<li>NumTrials: This integer specifies many trials or repititions you want to carry out.</li>
+<li>NumDays: This integer specifies how many days you would like to run each trial for.</li>
+<li>Algorithm: This specifies which algorithm to use. All Algorithms are subclasses of the Trial class, and each subclass will implement its own logic for how it will approach quest clearing each day.</li>
+</ul>
+<p>Next, we will run the simulation with the following command::</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Average</span><span class="p">,</span><span class="n">StdDev</span><span class="o">=</span><span class="n">DQSim</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">NumTrials</span><span class="p">,</span><span class="n">NumDays</span><span class="p">,</span><span class="n">QuestFile</span><span class="p">,</span><span class="n">Algorithm</span><span class="p">)</span><span class="o">.</span><span class="n">RunSim</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This line instantiates the simulation using the given parameters and then runs it, collecting the average earnings per day and the standard deviation in the variables Average and StdDev respectively. DQSim.Simulation calls and instantiates the simulation from the imported DQSim module. NumTrials,NumDays,QuestFile,Algorithm are the parameters that are passed to the simulation to tell it how many trials to do and so on. RunSim() then issues the command to run the simulation. The outputs are collected in Average and StdDev, which are then printed via the command::</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="s">&quot;Average Earnings: {}. Standard Deviation: {}.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">Average</span><span class="p">,</span><span class="n">StdDev</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="implementing-your-own-algorithms">
+<h2>Implementing your own Algorithms<a class="headerlink" href="#implementing-your-own-algorithms" title="Permalink to this headline">¶</a></h2>
+<p>This is the awesome part of this simulator. It allows users to think of and test out their own strategies to try and discover potentially new and more profitable tactics in clearing dailies.</p>
+<p>There are already a few algorithms available if you wish to use them.</p>
+<ul class="simple">
+<li>DQSim.CompleteHighest: Waits till it has maximum number of Quests, then completes highest one each day.</li>
+<li>DQSim.KeepOneForty: Attempt to reroll a 40 gold Quest each day if it can. Will keep at most one 40 gold Quest at end of day, and complete all others.</li>
+<li>DQSim.RerollAndClear: Attempts to reroll one 40 gold Quest, then clears all Quests.</li>
+</ul>
+<p>When creating a new Algorithm, you will want to inherit from DQSim.trial, and overwrite the RunAlgorithm function, like so:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">AwesomeHeroesAlgorithm</span><span class="p">(</span><span class="n">DQSim</span><span class="o">.</span><span class="n">Trial</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">RunAlgorithm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">pass</span>
+                <span class="c">#whatever other instructions you need.</span>
+</pre></div>
+</div>
+<p>There are several commands you may find useful when writing your algorithm.</p>
+<p>For Trial objects (such as your algorithm),</p>
+<ul class="simple">
+<li>self.GetQuests() will return a list of current Quest objects.</li>
+<li>self.GetNumberOfQuests() will return and integer representing how many quests are currently in the quest log.</li>
+<li>self.GetQuestLimit() will return an integer representing how many quests the quest log can hold.</li>
+<li>self.CompleteQuest(Quest object) will complete the quest specified by the Quest object, removing it from the quest log and adding its value to your earnings.</li>
+<li>self.GetQuestLog().RerollQuest(Quest object) will reroll the specified Quest object into a random other quest.</li>
+</ul>
+<p>Note: you don&#8217;t have to ask the Trial to complete all the remaining quests on the last day. The parent Trial object already does this so you don&#8217;t have to.</p>
+<p>Iterating over the return of the self.GetQuests() function will iterate over each of the Quest objects in the quest log. Quest objects can be operated on with some functions.</p>
+<ul class="simple">
+<li>Quest.GetName() will return the name of the quest.</li>
+<li>Quest.GetValue() will return the integer value of the quest.</li>
+</ul>
+<p>For this tutorial, let&#8217;s try to implement an algorithm for Heroes of the storm that does the following:</p>
+<ul class="simple">
+<li>Everyday, immediately complete all quests that are worth 600 or 800 gold.</li>
+<li>After that, if we have reached the maximum number of quests in the log, complete one quest that is the highest value or tied for highest value.</li>
+</ul>
+<p>For this, we&#8217;ll implement the functions Complete_800_600 and CompleteHighestIfFull.:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">Complete_800_600</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">EachQuest</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetQuests</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">EachQuest</span><span class="o">.</span><span class="n">GetValue</span><span class="p">()</span> <span class="o">==</span> <span class="mi">800</span> <span class="ow">or</span> <span class="n">EachQuest</span><span class="o">.</span><span class="n">GetValue</span><span class="p">()</span> <span class="o">==</span> <span class="mi">600</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">CompleteQuest</span><span class="p">(</span><span class="n">EachQuest</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">CompleteHighestIfFull</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetNumberOfQuests</span><span class="p">()</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetQuestLimit</span><span class="p">():</span>
+                <span class="n">HighestValue</span><span class="o">=</span><span class="mi">0</span>
+                <span class="k">for</span> <span class="n">EachQuest</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetQuests</span><span class="p">():</span> <span class="c">#this loop helps find the highest value</span>
+                        <span class="k">if</span> <span class="n">EachQuest</span><span class="o">.</span><span class="n">GetValue</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">HighestValue</span><span class="p">:</span>
+                                <span class="n">HighestValue</span> <span class="o">=</span>  <span class="n">EachQuest</span><span class="o">.</span><span class="n">GetValue</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">EachQuest</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetQuests</span><span class="p">():</span>
+                        <span class="k">if</span> <span class="n">EachQuest</span><span class="o">.</span><span class="n">GetValue</span><span class="p">()</span> <span class="o">==</span> <span class="n">HighestValue</span><span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">CompleteQuest</span><span class="p">(</span><span class="n">EachQuest</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then we&#8217;ll need to ask RunAlgorithm to run these two functions in order.:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">RunAlgorithm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Complete_800_600</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">CompleteHighestIfFull</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The final code block for the new class will be</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">AwesomeHeroesAlgorithm</span><span class="p">(</span><span class="n">DQSim</span><span class="o">.</span><span class="n">Trial</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">RunAlgorithm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">Complete_800_600</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">CompleteHighestIfFull</span><span class="p">()</span>
+        <span class="k">def</span> <span class="nf">Complete_800_600</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">EachQuest</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetQuests</span><span class="p">():</span>
+                        <span class="k">if</span> <span class="n">EachQuest</span><span class="o">.</span><span class="n">GetValue</span><span class="p">()</span> <span class="o">==</span> <span class="mi">800</span> <span class="ow">or</span> <span class="n">EachQuest</span><span class="o">.</span><span class="n">GetValue</span><span class="p">()</span> <span class="o">==</span> <span class="mi">600</span><span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">CompleteQuest</span><span class="p">(</span><span class="n">EachQuest</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">CompleteHighestIfFull</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetNumberOfQuests</span><span class="p">()</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetQuestLimit</span><span class="p">():</span>
+                        <span class="n">HighestValue</span><span class="o">=</span><span class="mi">0</span>
+                        <span class="k">for</span> <span class="n">EachQuest</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetQuests</span><span class="p">():</span> <span class="c">#this loop helps find the highest value</span>
+                                <span class="k">if</span> <span class="n">EachQuest</span><span class="o">.</span><span class="n">GetValue</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">HighestValue</span><span class="p">:</span>
+                                        <span class="n">HighestValue</span> <span class="o">=</span>  <span class="n">EachQuest</span><span class="o">.</span><span class="n">GetValue</span><span class="p">()</span>
+                        <span class="k">for</span> <span class="n">EachQuest</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetQuests</span><span class="p">():</span>
+                                <span class="k">if</span> <span class="n">EachQuest</span><span class="o">.</span><span class="n">GetValue</span><span class="p">()</span> <span class="o">==</span> <span class="n">HighestValue</span><span class="p">:</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">CompleteQuest</span><span class="p">(</span><span class="n">EachQuest</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>And that&#8217;s it! We can now run our shiny new algorithm by changing</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Algorithm</span><span class="o">=</span><span class="n">DQSim</span><span class="o">.</span><span class="n">CompleteHighest</span>
+</pre></div>
+</div>
+<p>in line 12 to</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Algorithm</span><span class="o">=</span><span class="n">AwesomeHeroesAlgorithm</span>
+</pre></div>
+</div>
+<p>Have fun creating your new Algorithms and finding more profitable ways to clear dailies!</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="README.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Tutorial</a><ul>
+<li><a class="reference internal" href="#running-the-simulator">Running the simulator</a></li>
+<li><a class="reference internal" href="#implementing-your-own-algorithms">Implementing your own Algorithms</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="quick_setup.html"
+                        title="previous chapter">Quick Setup</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="reference.html"
+                        title="next chapter">Handy Dandy Reference</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/tutorial.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="reference.html" title="Handy Dandy Reference"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="quick_setup.html" title="Quick Setup"
+             >previous</a> |</li>
+        <li><a href="README.html">Daily Quest Simulator 1.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Ninjalemur.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

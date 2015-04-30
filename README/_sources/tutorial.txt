@@ -1,0 +1,121 @@
+Tutorial
+========
+
+Welcome to the tutorial! In this tutorial, we will be going over how to set up a basic simulation, as well as how to implement your own algorithms.
+
+Running the simulator
+********************
+
+The main function will be the main thread that will be holding all the parameters, running the simulations, and collecting the results.
+
+There are several variables that can be changed to suit your liking.
+
+* QuestFile: This file is specfies the path to wherever the files containing daily quest information are.
+* NumTrials: This integer specifies many trials or repititions you want to carry out.
+* NumDays: This integer specifies how many days you would like to run each trial for.
+* Algorithm: This specifies which algorithm to use. All Algorithms are subclasses of the Trial class, and each subclass will implement its own logic for how it will approach quest clearing each day.
+  
+Next, we will run the simulation with the following command:::
+
+
+        Average,StdDev=DQSim.Simulation(NumTrials,NumDays,QuestFile,Algorithm).RunSim()
+
+This line instantiates the simulation using the given parameters and then runs it, collecting the average earnings per day and the standard deviation in the variables Average and StdDev respectively. DQSim.Simulation calls and instantiates the simulation from the imported DQSim module. NumTrials,NumDays,QuestFile,Algorithm are the parameters that are passed to the simulation to tell it how many trials to do and so on. RunSim() then issues the command to run the simulation. The outputs are collected in Average and StdDev, which are then printed via the command:::
+
+        print("Average Earnings: {}. Standard Deviation: {}.".format(Average,StdDev))
+
+
+Implementing your own Algorithms
+********************************
+
+This is the awesome part of this simulator. It allows users to think of and test out their own strategies to try and discover potentially new and more profitable tactics in clearing dailies.
+
+There are already a few algorithms available if you wish to use them.
+
+* DQSim.CompleteHighest: Waits till it has maximum number of Quests, then completes highest one each day.
+* DQSim.KeepOneForty: Attempt to reroll a 40 gold Quest each day if it can. Will keep at most one 40 gold Quest at end of day, and complete all others.
+* DQSim.RerollAndClear: Attempts to reroll one 40 gold Quest, then clears all Quests.
+
+
+When creating a new Algorithm, you will want to inherit from DQSim.trial, and overwrite the RunAlgorithm function, like so::
+
+        class AwesomeHeroesAlgorithm(DQSim.Trial):
+	        def RunAlgorithm(self):
+	        	pass
+                        #whatever other instructions you need.
+
+
+There are several commands you may find useful when writing your algorithm.
+
+For Trial objects (such as your algorithm),
+
+* self.GetQuests() will return a list of current Quest objects.
+* self.GetNumberOfQuests() will return and integer representing how many quests are currently in the quest log.
+* self.GetQuestLimit() will return an integer representing how many quests the quest log can hold.
+* self.CompleteQuest(Quest object) will complete the quest specified by the Quest object, removing it from the quest log and adding its value to your earnings.
+* self.GetQuestLog().RerollQuest(Quest object) will reroll the specified Quest object into a random other quest.
+
+Note: you don't have to ask the Trial to complete all the remaining quests on the last day. The parent Trial object already does this so you don't have to.
+
+Iterating over the return of the self.GetQuests() function will iterate over each of the Quest objects in the quest log. Quest objects can be operated on with some functions.
+
+* Quest.GetName() will return the name of the quest.
+* Quest.GetValue() will return the integer value of the quest.
+
+For this tutorial, let's try to implement an algorithm for Heroes of the storm that does the following:
+
+* Everyday, immediately complete all quests that are worth 600 or 800 gold.
+* After that, if we have reached the maximum number of quests in the log, complete one quest that is the highest value or tied for highest value.
+
+For this, we'll implement the functions Complete_800_600 and CompleteHighestIfFull.::
+
+        def Complete_800_600(self):
+                for EachQuest in self.GetQuests():
+                        if EachQuest.GetValue() == 800 or EachQuest.GetValue() == 600:
+                                self.CompleteQuest(EachQuest)
+        def CompleteHighestIfFull(self):
+                if self.GetNumberOfQuests() == self.GetQuestLimit():
+                        HighestValue=0
+                        for EachQuest in self.GetQuests(): #this loop helps find the highest value
+                                if EachQuest.GetValue() > HighestValue:
+                                        HighestValue =  EachQuest.GetValue()
+                        for EachQuest in self.GetQuests():
+                                if EachQuest.GetValue() == HighestValue:
+                                        self.CompleteQuest(EachQuest)
+
+Then we'll need to ask RunAlgorithm to run these two functions in order.::
+
+        def RunAlgorithm(self):
+                self.Complete_800_600()
+                self.CompleteHighestIfFull()
+
+
+The final code block for the new class will be ::
+
+        class AwesomeHeroesAlgorithm(DQSim.Trial):
+                def RunAlgorithm(self):
+                        self.Complete_800_600()
+                        self.CompleteHighestIfFull()
+                def Complete_800_600(self):
+                        for EachQuest in self.GetQuests():
+                                if EachQuest.GetValue() == 800 or EachQuest.GetValue() == 600:
+                                        self.CompleteQuest(EachQuest)
+                def CompleteHighestIfFull(self):
+                        if self.GetNumberOfQuests() == self.GetQuestLimit():
+                                HighestValue=0
+                                for EachQuest in self.GetQuests(): #this loop helps find the highest value
+                                        if EachQuest.GetValue() > HighestValue:
+                                                HighestValue =  EachQuest.GetValue()
+                                for EachQuest in self.GetQuests():
+                                        if EachQuest.GetValue() == HighestValue:
+                                                self.CompleteQuest(EachQuest)
+
+And that's it! We can now run our shiny new algorithm by changing ::
+
+        Algorithm=DQSim.CompleteHighest
+
+in line 12 to ::
+
+        Algorithm=AwesomeHeroesAlgorithm
+
+Have fun creating your new Algorithms and finding more profitable ways to clear dailies!

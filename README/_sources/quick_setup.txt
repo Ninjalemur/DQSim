@@ -1,0 +1,8 @@
+Quick Setup
+===========
+
+Thanks for downloading the Daily Quest Simulator by Ninjalemur. 
+
+To start, make sure you have DQSim.py and run_dq_sim.py in the same directory. You will also need a tab delimited file containing daily quests names in the first column, and quest reward amounts in the last column. The files hearthstone_dailies.txt and heroes_dailies.txt are provided for Hearthstone and Heroes of the storm respectively.
+
+You can use run_dq_sim.py as the handler to call and classes from DQSim.py, as well as define your own algorithms to use there. If this is your first time, it is recommended that you go through the tutorial and try out DQSim using the sample code there.

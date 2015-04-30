@@ -1,0 +1,7 @@
+Handy Dandy Reference
+=====================
+
+Welcome to the reference section!
+
+.. automodule:: DQSim
+   :members:

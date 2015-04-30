@@ -1,0 +1,9 @@
+Play 2 Warcraft heroes	200
+Play 2 Diablo heroes	200
+Play 2 Starcraft heroes	200
+Play 3 Assassin heroes	300
+Play 3 Specialist heroes	300
+Play 3 Support heroes	300
+Play 3 Warrior heroes	300
+Win 3 games	600
+Play 8 games	800

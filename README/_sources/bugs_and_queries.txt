@@ -1,0 +1,6 @@
+Bugs and Queries
+================
+
+Do submit bugs and queries to Ninjalemur33[at][gmail][dot][com].
+
+For bugs, do include the source code and data files you used (if you used different files from what I have here) so that I can replicate and address the bug. Thanks!
